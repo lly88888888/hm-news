@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     async enter () {
-      if (!this.username && !this.password) return
+      if (!this.username.trim() && !this.password.trim()) return Toast('用户名或密码不能为空')
       const res = await axios.post('http://localhost:3000/login', {
         username: this.username,
         password: this.password
