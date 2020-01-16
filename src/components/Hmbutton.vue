@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .enter {
   width: 100%;
   background-color: #c30;

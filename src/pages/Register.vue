@@ -31,6 +31,9 @@
     <div class="login">
       <Hmbutton @click="register">注册</Hmbutton>
     </div>
+    <div class="to-login">
+      已有账号?立即<span @click="toLogin">登录</span>
+    </div>
   </div>
 </template>
 
@@ -38,10 +41,6 @@
 import '../css/font.css'
 import Hminput from '../components/Hminput'
 import Hmbutton from '../components/Hmbutton'
-import axios from 'axios'
-import Vue from 'vue'
-import { Toast } from 'vant'
-Vue.use(Toast)
 export default {
   data () {
     return {
@@ -57,20 +56,30 @@ export default {
   methods: {
     async register () {
       if (!this.username && !this.password && !this.nickname) return
-      const res = await axios.post('http://localhost:3000/register', {
+      const res = await this.$axios.post('/register', {
         username: this.username,
         nickname: this.nickname,
         password: this.password
       })
       const { data } = res
       if (data.statusCode === 400) {
-        Toast(data.message)
+        this.$toast(data.message)
       } else {
-        this.$router.push('/login')
+        console.log(data)
+        this.$router.push({
+          name: 'login',
+          params: {
+            username: this.username,
+            password: this.password
+          }
+        })
       }
     },
     close () {
       this.$router.go(-1)
+    },
+    toLogin () {
+      this.$router.push('/login')
     }
   }
 }
@@ -91,6 +100,14 @@ export default {
   }
   .password {
     padding-bottom: 66px;
+  }
+  .to-login{
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    span{
+      color: red;
+    }
   }
 }
 </style>

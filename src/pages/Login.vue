@@ -24,6 +24,9 @@
     <div class="enter">
       <Hmbutton @click="enter">登录</Hmbutton>
     </div>
+    <div class="to-register">
+      没有账号?立即<span @click="toRegister">注册</span>
+    </div>
   </div>
 </template>
 
@@ -31,10 +34,6 @@
 import '../css/font.css'
 import Hminput from '../components/Hminput'
 import Hmbutton from '../components/Hmbutton'
-import axios from 'axios'
-import Vue from 'vue'
-import { Toast } from 'vant'
-Vue.use(Toast)
 export default {
   data () {
     return {
@@ -46,10 +45,14 @@ export default {
     Hminput,
     Hmbutton
   },
+  created () {
+    this.username = this.$route.params.username
+    this.password = this.$route.params.password
+  },
   methods: {
     async enter () {
-      if (!this.username.trim() && !this.password.trim()) return Toast('用户名或密码不能为空')
-      const res = await axios.post('http://localhost:3000/login', {
+      if (!this.username.trim() && !this.password.trim()) return this.$toast('用户名或密码不能为空')
+      const res = await this.$axios.post('/login', {
         username: this.username,
         password: this.password
       })
@@ -57,13 +60,16 @@ export default {
       console.log(data)
 
       if (data.statusCode === 401) {
-        Toast('用户名或密码错误')
+        this.$toast('用户名或密码错误')
       } else {
         this.$router.push('/index')
       }
     },
     close () {
       this.$router.go(-1)
+    },
+    toRegister () {
+      this.$router.push('/register')
     }
   }
 }
@@ -84,6 +90,14 @@ export default {
   }
   .password {
     padding-bottom: 66px;
+  }
+  .to-register{
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    span{
+      color: red;
+    }
   }
 }
 </style>
