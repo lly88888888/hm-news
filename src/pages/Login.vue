@@ -62,6 +62,9 @@ export default {
       if (data.statusCode === 401) {
         this.$toast('用户名或密码错误')
       } else {
+        // 将登录的token和id存到浏览器缓存中,为了后续查询登录状态
+        localStorage.setItem('token', data.data.token)
+        localStorage.setItem('user_id', data.data.user.id)
         this.$router.push('/index')
       }
     },

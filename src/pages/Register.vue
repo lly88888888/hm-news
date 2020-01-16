@@ -65,7 +65,6 @@ export default {
       if (data.statusCode === 400) {
         this.$toast(data.message)
       } else {
-        console.log(data)
         this.$router.push({
           name: 'login',
           params: {
