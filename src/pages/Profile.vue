@@ -1,15 +1,15 @@
 <template>
-  <div class="profile">
+  <div class="profile" >
     <div class="header" @click="compile">
       <div class="avatar">
-        <img src="http://img.zhaogexing.com/2019/08/04/1564924597807792.jpg" alt="">
+        <img :src="avatar" alt="" v-show="loading">
       </div>
       <div class="info">
         <p>
-          <i class="iconfont iconxingbienv"></i>
-          小小书童
+          <i :class="sex"></i>
+          {{profile.nickname}}
         </p>
-        <p>2020-01-07</p>
+        <p>{{profile.create_date | time}}</p>
       </div>
       <div class="icon">
         <i class="iconfont iconjiantou1"></i>
@@ -26,19 +26,26 @@
 
 <script>
 import Hmnav from '../components/Hmnav'
+import img from '../assets/1564924597807792.jpg'
 export default {
   components: {
     Hmnav
   },
   async created () {
-    const res = await this.$axios.get('/user/:id', {
-      params: {
-        id: localStorage.getItem('user_id')
+    const id = localStorage.getItem('user_id')
+    const res = await this.$axios.get(`/user/${id}`, {
+      headers: {
+        Authorization: localStorage.getItem('token')
       }
     })
-    if (res.data.statusCode === 401) {
-      localStorage.removeItem('token')
-      this.$router.push('/login')
+    this.profile = res.data.data
+    this.loading = true
+    console.log(this.profile)
+  },
+  data () {
+    return {
+      profile: {},
+      loading: false
     }
   },
   methods: {
@@ -49,11 +56,24 @@ export default {
         }
       })
     }
+  },
+  computed: {
+    avatar () {
+      if (this.profile.head_img) {
+        return this.$axios.defaults.baseURL + this.profile.head_img
+      } else {
+        return img
+      }
+    },
+    sex () {
+      return this.profile.gender === 1 ? 'iconfont iconxingbienan' : 'iconfont iconxingbienv'
+    }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
  .header{
    padding: 15px;
    display: flex;
@@ -74,6 +94,9 @@ export default {
        font-size: 14px;
        i{
          color: red;
+         &.iconxingbienan {
+           color: blue;
+         }
        }
        &:last-child{
          font-size: 12px;
