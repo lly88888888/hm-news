@@ -4,10 +4,11 @@ import router from './router'
 import axios from 'axios'
 import 'lib-flexible'
 import './css/base.css'
-import { Toast } from 'vant'
+import { Toast, Dialog } from 'vant'
 import 'vant/lib/index.css'
 import moment from 'moment'
 Vue.use(Toast)
+Vue.use(Dialog)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://localhost:3000'

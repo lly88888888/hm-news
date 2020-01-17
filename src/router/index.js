@@ -16,4 +16,17 @@ const router = new VueRouter({
     { path: '/compile', component: Compile, name: 'compile' }
   ]
 })
+const pathURL = ['/profile', '/compile']
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  if (pathURL.includes(to.path)) {
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
+})
 export default router

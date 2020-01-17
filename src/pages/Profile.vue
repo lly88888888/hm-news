@@ -20,6 +20,7 @@
       <Hmnav name="我的跟贴" describe="跟帖/回复"></Hmnav>
       <Hmnav name="我的收藏" describe="文章/视频"></Hmnav>
       <Hmnav name="设置"></Hmnav>
+      <Hmnav name="退出" @click="exit"></Hmnav>
     </div>
   </div>
 </template>
@@ -55,6 +56,18 @@ export default {
         params: {
         }
       })
+    },
+    async exit () {
+      try {
+        await this.$dialog.confirm({
+          title: '温馨提示',
+          message: '您确认要退出吗?'
+        })
+        localStorage.removeItem('token')
+        localStorage.removeItem('user_id')
+        this.$router.push('/login')
+      } catch (error) {
+      }
     }
   },
   computed: {
