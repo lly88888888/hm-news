@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     async enter () {
-      if (!this.username.trim() && !this.password.trim()) return this.$toast('用户名或密码不能为空')
+      if (!this.username && !this.password) return this.$toast('用户名或密码不能为空')
       const res = await this.$axios.post('/login', {
         username: this.username,
         password: this.password
