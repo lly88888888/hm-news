@@ -1,15 +1,15 @@
 <template>
   <div class="attention">
-    <Hmheader name="我的关注"></Hmheader>
-    <div class="hm-main">
+    <Hmheader name="我的关注" @click="back"></Hmheader>
+    <div class="hm-main" v-for="item in attentionList" :key="item.id">
       <div class="img">
-        <img src="" alt="">
+        <img :src="$axios.defaults.baseURL + item.head_img" alt="">
       </div>
       <div class="info">
-        <p>火星新闻播报</p>
-        <p>2020-01-07</p>
+        <p>{{item.nickname}}</p>
+        <span>{{item.create_date | time}}</span>
       </div>
-      <div class="cancal">取消关注</div>
+      <div class="cancal" @click="cancalFollow(item.id)">取消关注</div>
     </div>
   </div>
 </template>
@@ -19,10 +19,77 @@ import Hmheader from '../components/Hmheader'
 export default {
   components: {
     Hmheader
+  },
+  data () {
+    return {
+      attentionList: []
+    }
+  },
+  created () {
+    this.getAttention()
+  },
+  methods: {
+    back () {
+      this.$router.go(-1)
+    },
+    async cancalFollow (id) {
+      try {
+        await this.$dialog.confirm({
+          title: '温馨提示',
+          message: '您确认要取消关注该用户吗?'
+        })
+        const res = await this.$axios.get(`/user_unfollow/${id}`)
+        if (res.data.statusCode === 200) {
+          this.$toast.success('取消关注成功')
+          this.getAttention()
+        }
+      } catch (error) {
+      }
+    },
+    async getAttention () {
+      const res = await this.$axios.get('/user_follows')
+      console.log(res)
+      this.attentionList = res.data.data
+    }
   }
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.attention{
+  .hm-main{
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    .img{
+      img{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+    }
+    .info{
+      flex: 1;
+      margin-left: 10px;
+      p{
+        font-size: 16px;
+        color: rgba(0,0,0,0.87);
+      }
+      span{
+        font-size: 14px;
+        color: rgba(0,0,0,0.54);
+      }
+    }
+    .cancal{
+      width: 73px;
+      height: 30px;
+      font-size: 12px;
+      background-color: rgba(153, 153, 153, 0.2);
+      border-radius: 15px;
+      text-align: center;
+      line-height: 30px;
+    }
+  }
+  }
 </style>
