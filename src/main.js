@@ -4,9 +4,11 @@ import router from './router'
 import axios from 'axios'
 import 'lib-flexible'
 import './css/base.css'
-import { Toast, Dialog, Field, Cell, CellGroup, RadioGroup, Radio, Uploader } from 'vant'
+import { Toast, Dialog, Field, Cell, CellGroup, RadioGroup, Radio, Uploader, Button, List } from 'vant'
 import 'vant/lib/index.css'
 import moment from 'moment'
+import VueCropper from 'vue-cropper'
+Vue.use(VueCropper)
 Vue.use(Toast)
 Vue.use(Dialog)
 Vue.use(Field)
@@ -15,6 +17,8 @@ Vue.use(CellGroup)
 Vue.use(RadioGroup)
 Vue.use(Radio)
 Vue.use(Uploader)
+Vue.use(Button)
+Vue.use(List)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://localhost:3000'
@@ -41,8 +45,8 @@ axios.interceptors.request.use(function (config) {
   }
   return config
 })
-Vue.filter('time', (value) => {
-  return moment(value).format('YYYY-MM-DD')
+Vue.filter('time', (value, format = 'YYYY-MM-DD') => {
+  return moment(value).format(format)
 })
 new Vue({
   router,

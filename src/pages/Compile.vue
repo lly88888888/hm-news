@@ -41,6 +41,19 @@
         </van-cell-group>
       </van-radio-group>
     </van-dialog>
+    <div class="mask" v-show="isCropShow">
+      <vueCropper
+        ref="cropper"
+        :img="option.img"
+        :autoCrop="option.autoCrop"
+        :autoCropWidth="option.autoCropWidth"
+        :autoCropHeight="option.autoCropHeight"
+        :fixed="option.fixed"
+        :fixedNumber="option.fixedNumber"
+      ></vueCropper>
+      <van-button @click="cancal">取消</van-button>
+      <van-button type="primary" @click="cropImg">裁剪</van-button>
+    </div>
   </div>
 </template>
 
@@ -58,7 +71,20 @@ export default {
       isPwdShow: false,
       password: '',
       isGenderShow: false,
-      gender: 0
+      gender: 0,
+      isCropShow: false,
+      option: {
+        img: '', // 裁剪图片的地址
+        info: true, // 裁剪框的大小信息
+        outputSize: 1, // 裁剪生成图片的质量
+        canScale: false, // 图片是否允许滚轮缩放
+        outputType: 'jpeg', // 裁剪生成图片的格式
+        autoCrop: true, // 是否默认生成截图框
+        autoCropWidth: 150, // 默认生成截图框宽度
+        autoCropHeight: 150, // 默认生成截图框高度
+        fixed: false, // 是否开启截图框宽高固定比例
+        fixedNumber: [4, 4] // 截图框的宽高比例
+      }
     }
   },
   components: {
@@ -94,14 +120,9 @@ export default {
       this.sendAxios({ gender: this.gender })
     },
     // 文件上传
-    async afterRead (file) {
-      console.log(file.file)
-      const fd = new FormData()
-      fd.append('file', file.file)
-      const res = await this.$axios.post('/upload', fd)
-      if (res.data.statusCode === 200) {
-        this.sendAxios({ head_img: res.data.data.url })
-      }
+    afterRead (file) {
+      this.option.img = file.content
+      this.isCropShow = true
     },
     async getCompile () {
       const id = localStorage.getItem('user_id')
@@ -114,8 +135,35 @@ export default {
       const res = await this.$axios.post(`/user_update/${id}`, data)
       if (res.data.statusCode === 200) {
         this.$toast.success('修改成功')
+        this.isCropShow = false
         this.getCompile()
       }
+    },
+    cancal () {
+      this.isCropShow = false
+    },
+    cropImg () {
+      // 获取截图的base64 数据
+      this.$refs.cropper.getCropData(async imgData => {
+        console.log(imgData)
+        const file = this.convertBase64UrlToBlob(imgData)
+        const fd = new FormData()
+        fd.append('file', file)
+        const res = await this.$axios.post('/upload', fd)
+        if (res.data.statusCode === 200) {
+          this.sendAxios({ head_img: res.data.data.url })
+        }
+      })
+    },
+    convertBase64UrlToBlob (urlData) {
+      let bytes = window.atob(urlData.split(',')[1])// 去掉url的头，并转换为byte
+      // 处理异常,将ascii码小于0的转换为大于0
+      let ab = new ArrayBuffer(bytes.length)
+      let ia = new Uint8Array(ab)
+      for (var i = 0; i < bytes.length; i++) {
+        ia[i] = bytes.charCodeAt(i)
+      }
+      return new Blob([ab], { type: 'image/jpeg' })
     }
   },
   computed: {
@@ -155,6 +203,27 @@ export default {
      padding:0 10px;
      .van-cell-group{
        margin-top: 10px;
+     }
+   }
+   .mask{
+     width: 100%;
+     height: 100%;
+     position: fixed;
+     z-index: 999;
+     left: 0;
+     top: 0;
+     .van-button{
+       position: fixed;
+       top: 0;
+       &:first-child{
+         left: 0;
+       }
+       &:last-child{
+         right: 0;
+       }
+     }
+     .van-button--default{
+       background-color: #ccc;
      }
    }
 }

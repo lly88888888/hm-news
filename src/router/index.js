@@ -7,6 +7,7 @@ import Profile from '../pages/Profile.vue'
 import Compile from '../pages/Compile.vue'
 import Attention from '../pages/Attention.vue'
 import Collect from '../pages/Collect.vue'
+import FollowUp from '../pages/FollowUp.vue'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
@@ -17,10 +18,11 @@ const router = new VueRouter({
     { path: '/profile', component: Profile, name: 'profile' },
     { path: '/compile', component: Compile, name: 'compile' },
     { path: '/attention', component: Attention, name: 'attention' },
-    { path: '/collect', component: Collect, name: 'collect' }
+    { path: '/collect', component: Collect, name: 'collect' },
+    { path: '/followup', component: FollowUp, name: 'followup' }
   ]
 })
-const pathURL = ['/profile', '/compile']
+const pathURL = ['/profile', '/compile', '/followup', '/collect', '/attention']
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   if (pathURL.includes(to.path)) {
