@@ -11,7 +11,7 @@ import FollowUp from '../pages/FollowUp.vue'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
-    { path: '/', redirect: '/login' },
+    { path: '/', redirect: '/index' },
     { path: '/login', component: Login, name: 'login' },
     { path: '/register', component: Register, name: 'register' },
     { path: '/index', component: Index, name: 'index' },

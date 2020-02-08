@@ -4,10 +4,11 @@ import router from './router'
 import axios from 'axios'
 import 'lib-flexible'
 import './css/base.css'
-import { Toast, Dialog, Field, Cell, CellGroup, RadioGroup, Radio, Uploader, Button, List } from 'vant'
+import { Toast, Dialog, Field, Cell, CellGroup, RadioGroup, Radio, Uploader, Button, List, Tab, Tabs } from 'vant'
 import 'vant/lib/index.css'
 import moment from 'moment'
 import VueCropper from 'vue-cropper'
+import HmPost from './components/HmPost.vue'
 Vue.use(VueCropper)
 Vue.use(Toast)
 Vue.use(Dialog)
@@ -19,6 +20,9 @@ Vue.use(Radio)
 Vue.use(Uploader)
 Vue.use(Button)
 Vue.use(List)
+Vue.use(Tab)
+Vue.use(Tabs)
+Vue.component('HmPost', HmPost)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://localhost:3000'

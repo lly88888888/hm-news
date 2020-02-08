@@ -13,13 +13,84 @@
         <i class="iconfont iconwode"></i>
       </div>
     </div>
+    <van-tabs v-model="active" sticky swipeable animated>
+      <van-tab :title="item.name" v-for="item in tabList" :key="item.id">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          :immediate-check="false"
+          :offset="5"
+          @load="onLoad">
+          <HmPost :post="item.postList"></HmPost>
+        </van-list>
+      </van-tab>
+    </van-tabs>
   </div>
 </template>
 <script>
 export default {
+  data () {
+    return {
+      active: localStorage.getItem('token') ? 1 : 0,
+      tabList: [],
+      loading: false,
+      finished: false,
+      pageIndex: 1,
+      pageSize: 5
+    }
+  },
+  async created () {
+    await this.getTabList()
+    this.getPostList()
+  },
   methods: {
     login () {
-      this.$router.push('/login')
+      this.$router.push('/profile')
+    },
+    async getTabList () {
+      const res = await this.$axios.get('/category')
+      const { statusCode, data } = res.data
+      if (statusCode === 200) {
+        data.forEach(element => {
+          element.postList = []
+        })
+        this.tabList = data
+      }
+    },
+    async getPostList () {
+      const id = this.tabList[this.active].id
+      if (this.tabList[this.active].postList.length > 10) {
+        return
+      }
+      const res = await this.$axios.get('/post', {
+        params: {
+          category: id,
+          pageIndex: this.pageIndex,
+          pageSize: this.pageSize
+        }
+      })
+      const { statusCode, data } = res.data
+      if (statusCode === 200) {
+        console.log(data)
+        this.tabList[this.active].postList = [...this.tabList[this.active].postList, ...data]
+        this.loading = false
+        if (data.length < this.pageSize) {
+          this.finished = true
+        }
+      }
+    },
+    onLoad () {
+      setTimeout(() => {
+        this.pageIndex++
+        this.getPostList()
+      }, 1500)
+    }
+  },
+  watch: {
+    active (value) {
+      this.pageIndex = 1
+      this.getPostList()
     }
   }
 }

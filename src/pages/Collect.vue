@@ -1,18 +1,7 @@
 <template>
   <div class="collect">
     <Hmheader name="我的收藏" @click="back"></Hmheader>
-    <div class="main" v-for="item in collectList" :key="item.id">
-      <div class="info">
-        <p class="txt-cut">{{item.title}}</p>
-        <p>
-          <span>{{item.user.nickname}}</span>
-          <span>52跟帖</span>
-        </p>
-      </div>
-      <div class="img">
-        <img :src="item.cover[0].url" alt="">
-      </div>
-    </div>
+    <HmPost :post="collectList"></HmPost>
   </div>
 </template>
 
@@ -29,10 +18,14 @@ export default {
   },
   async created () {
     const res = await this.$axios.get('/user_star')
-    if (res.data.statusCode === 200) {
-      console.log(res)
+    const { statusCode, data } = res.data
+    if (statusCode === 200) {
+      console.log(data)
+      data.forEach(element => {
+        element.comment_length = element.comments.length
+      })
 
-      this.collectList = res.data.data
+      this.collectList = data
     }
   },
   methods: {
