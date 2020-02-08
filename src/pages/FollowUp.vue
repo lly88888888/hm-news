@@ -6,6 +6,7 @@
       :finished="finished"
       finished-text="没有更多了"
       :immediate-check="false"
+      :offset="5"
       @load="onLoad">
       <div class="main" v-for="item in followList" :key="item.id">
         <div class="time">{{item.create_date | time('YYYY-MM-DD HH:mm')}}</div>
@@ -52,8 +53,10 @@ export default {
       this.$router.go(-1)
     },
     onLoad () {
-      this.pageIndex++
-      this.getFollow()
+      setTimeout(() => {
+        this.pageIndex++
+        this.getFollow()
+      }, 1500)
     },
     async getFollow () {
       const res = await this.$axios.get('/user_comments', {
