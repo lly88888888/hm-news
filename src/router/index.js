@@ -8,6 +8,7 @@ import Compile from '../pages/Compile.vue'
 import Attention from '../pages/Attention.vue'
 import Collect from '../pages/Collect.vue'
 import FollowUp from '../pages/FollowUp.vue'
+import PostDetails from '../pages/PostDetails.vue'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
@@ -19,7 +20,8 @@ const router = new VueRouter({
     { path: '/compile', component: Compile, name: 'compile' },
     { path: '/attention', component: Attention, name: 'attention' },
     { path: '/collect', component: Collect, name: 'collect' },
-    { path: '/followup', component: FollowUp, name: 'followup' }
+    { path: '/followup', component: FollowUp, name: 'followup' },
+    { path: '/postdetails', component: PostDetails, name: 'postdetails' }
   ]
 })
 const pathURL = ['/profile', '/compile', '/followup', '/collect', '/attention']

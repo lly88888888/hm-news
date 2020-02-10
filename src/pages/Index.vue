@@ -15,15 +15,17 @@
     </div>
     <van-tabs v-model="active" sticky swipeable animated>
       <van-tab :title="item.name" v-for="item in tabList" :key="item.id">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          :immediate-check="false"
-          :offset="5"
-          @load="onLoad">
-          <HmPost :post="item.postList"></HmPost>
-        </van-list>
+        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <van-list
+            v-model="loading"
+            :finished="item.finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            :offset="5"
+            @load="onLoad">
+            <HmPost :post="item.postList"></HmPost>
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
   </div>
@@ -35,9 +37,8 @@ export default {
       active: localStorage.getItem('token') ? 1 : 0,
       tabList: [],
       loading: false,
-      finished: false,
-      pageIndex: 1,
-      pageSize: 5
+      pageSize: 5,
+      refreshing: false
     }
   },
   async created () {
@@ -54,48 +55,61 @@ export default {
       if (statusCode === 200) {
         data.forEach(element => {
           element.postList = []
+          element.pageIndex = 1
+          element.finished = false
         })
         this.tabList = data
       }
     },
     async getPostList () {
       const id = this.tabList[this.active].id
-      if (this.tabList[this.active].postList.length > 10) {
-        return
-      }
+
       const res = await this.$axios.get('/post', {
         params: {
           category: id,
-          pageIndex: this.pageIndex,
+          pageIndex: this.tabList[this.active].pageIndex,
           pageSize: this.pageSize
         }
       })
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        console.log(data)
         this.tabList[this.active].postList = [...this.tabList[this.active].postList, ...data]
         this.loading = false
         if (data.length < this.pageSize) {
-          this.finished = true
+          this.tabList[this.active].finished = true
         }
       }
     },
     onLoad () {
+      console.log(1)
       setTimeout(() => {
-        this.pageIndex++
+        this.tabList[this.active].pageIndex++
         this.getPostList()
       }, 1500)
+    },
+    onRefresh () {
+      this.tabList[this.active].postList = []
+      this.loading = true
+      this.tabList[this.active].finished = false
+      this.tabList[this.active].pageIndex = 1
+      setTimeout(() => {
+        this.refreshing = false
+      }, 50000)
+      this.getPostList()
     }
   },
   watch: {
     active (value) {
-      this.pageIndex = 1
+      this.loading = true
+      if (this.tabList[this.active].postList.length) {
+        return
+      }
       this.getPostList()
     }
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .index {
   .header {
     display: flex;

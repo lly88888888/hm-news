@@ -1,39 +1,39 @@
 <template>
   <div class="hm-post">
-    <div class="main" v-for="item1 in post" :key="item1.id">
-      <div class="video" v-if="item1.type == 2">
-        <p class="txt-cut">{{item1.title}}</p>
+    <div class="main" v-for="item in post" :key="item.id" @click="$router.push(`/postdetails/${item.id}`)">
+      <div class="video" v-if="item.type == 2">
+        <p class="txt-cut">{{item.title}}</p>
         <div class="imgs">
-          <img :src="item1.cover[0].url" alt="">
+          <img :src="item.cover[0].url" alt="">
           <div class="icon">
             <i class="iconfont iconshipin"></i>
           </div>
         </div>
         <p>
-          <span>{{item1.user.nickname}}</span>
-          <span>{{item1.comment_length}}跟帖</span>
+          <span>{{item.user.nickname}}</span>
+          <span>{{item.comment_length}}跟帖</span>
         </p>
       </div>
-      <div class="one" v-else-if="item1.cover.length == 1">
+      <div class="one" v-else-if="item.cover.length == 1">
         <div class="info">
-          <p class="txt-cut">{{item1.title}}</p>
+          <p class="txt-cut">{{item.title}}</p>
           <p>
-            <span>{{item1.user.nickname}}</span>
-            <span>{{item1.comment_length}}跟帖</span>
+            <span>{{item.user.nickname}}</span>
+            <span>{{item.comment_length}}跟帖</span>
           </p>
         </div>
         <div class="img">
-          <img :src="item1.cover[0].url" alt="">
+          <img :src="item.cover[0].url" alt="">
         </div>
       </div>
       <div class="other" v-else>
-        <p class="txt-cut">{{item1.title}}</p>
+        <p class="txt-cut">{{item.title}}</p>
         <div class="imgs">
-          <img :src="items.url" alt="" v-for="items in item1.cover" :key="items.id">
+          <img :src="items.url" alt="" v-for="items in item.cover" :key="items.id">
         </div>
         <p>
-          <span>{{item1.user.nickname}}</span>
-          <span>{{item1.comment_length}}跟帖</span>
+          <span>{{item.user.nickname}}</span>
+          <span>{{item.comment_length}}跟帖</span>
         </p>
       </div>
     </div>
