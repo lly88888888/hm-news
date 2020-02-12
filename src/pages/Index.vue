@@ -18,12 +18,12 @@
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <van-list
             v-model="loading"
-            :finished="item.finished"
+            :finished="finished"
             finished-text="没有更多了"
             :immediate-check="false"
             :offset="5"
             @load="onLoad">
-            <HmPost :post="item.postList"></HmPost>
+            <HmPost :post="postList"></HmPost>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -38,7 +38,10 @@ export default {
       tabList: [],
       loading: false,
       pageSize: 5,
-      refreshing: false
+      pageIndex: 1,
+      refreshing: false,
+      postList: [],
+      finished: false
     }
   },
   async created () {
@@ -53,63 +56,55 @@ export default {
       const res = await this.$axios.get('/category')
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        data.forEach(element => {
-          element.postList = []
-          element.pageIndex = 1
-          element.finished = false
-        })
         this.tabList = data
       }
     },
     async getPostList () {
       const id = this.tabList[this.active].id
-
       const res = await this.$axios.get('/post', {
         params: {
           category: id,
-          pageIndex: this.tabList[this.active].pageIndex,
+          pageIndex: this.pageIndex,
           pageSize: this.pageSize
         }
       })
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        this.tabList[this.active].postList = [...this.tabList[this.active].postList, ...data]
+        this.postList = [...this.postList, ...data]
         this.loading = false
+        this.refreshing = false
         if (data.length < this.pageSize) {
-          this.tabList[this.active].finished = true
+          this.finished = true
         }
       }
     },
     onLoad () {
       console.log(1)
       setTimeout(() => {
-        this.tabList[this.active].pageIndex++
+        this.pageIndex++
         this.getPostList()
       }, 1500)
     },
     onRefresh () {
-      this.tabList[this.active].postList = []
+      this.postList = []
       this.loading = true
-      this.tabList[this.active].finished = false
-      this.tabList[this.active].pageIndex = 1
-      setTimeout(() => {
-        this.refreshing = false
-      }, 50000)
-      this.getPostList()
+      this.finished = false
+      this.pageIndex = 0
+      this.onLoad()
     }
   },
   watch: {
     active (value) {
+      this.postList = []
       this.loading = true
-      if (this.tabList[this.active].postList.length) {
-        return
-      }
-      this.getPostList()
+      this.finished = false
+      this.pageIndex = 0
+      this.onLoad()
     }
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .index {
   .header {
     display: flex;

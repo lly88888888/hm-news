@@ -21,7 +21,7 @@ const router = new VueRouter({
     { path: '/attention', component: Attention, name: 'attention' },
     { path: '/collect', component: Collect, name: 'collect' },
     { path: '/followup', component: FollowUp, name: 'followup' },
-    { path: '/postdetails', component: PostDetails, name: 'postdetails' }
+    { path: '/postdetails/:id', component: PostDetails, name: 'postdetails' }
   ]
 })
 const pathURL = ['/profile', '/compile', '/followup', '/collect', '/attention']

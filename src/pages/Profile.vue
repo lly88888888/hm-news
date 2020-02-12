@@ -1,5 +1,6 @@
 <template>
   <div class="profile" >
+    <Hmheader name="个人中心" @click="back"></Hmheader>
     <div class="header" @click="compile">
       <div class="avatar">
         <img :src="avatar" alt="" v-show="loading">
@@ -27,10 +28,12 @@
 
 <script>
 import Hmnav from '../components/Hmnav'
+import Hmheader from '../components/Hmheader'
 import img from '../assets/1564924597807792.jpg'
 export default {
   components: {
-    Hmnav
+    Hmnav,
+    Hmheader
   },
   async created () {
     const id = localStorage.getItem('user_id')
@@ -68,6 +71,9 @@ export default {
         this.$router.push('/login')
       } catch (error) {
       }
+    },
+    back () {
+      this.$router.go(-1)
     }
   },
   computed: {

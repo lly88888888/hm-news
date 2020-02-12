@@ -35,6 +35,7 @@ import '../css/font.css'
 import Hminput from '../components/Hminput'
 import Hmbutton from '../components/Hmbutton'
 export default {
+  name: 'login',
   data () {
     return {
       username: '',
