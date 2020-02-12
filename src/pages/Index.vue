@@ -4,7 +4,7 @@
       <div class="logo">
         <i class="iconfont iconnew"></i>
       </div>
-      <div class="search">
+      <div class="search" @click="search">
         <i class="iconfont iconsearch"></i>
         <span>搜索中心</span>
       </div>
@@ -96,6 +96,9 @@ export default {
       this.finished = false
       this.pageIndex = 0
       this.onLoad()
+    },
+    search () {
+      this.$router.push('search')
     }
   },
   watch: {

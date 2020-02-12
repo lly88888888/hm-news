@@ -10,6 +10,7 @@ import Collect from '../pages/Collect.vue'
 import FollowUp from '../pages/FollowUp.vue'
 import PostDetails from '../pages/PostDetails.vue'
 import Category from '../pages/Category.vue'
+import Search from '../pages/Search.vue'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
@@ -23,7 +24,8 @@ const router = new VueRouter({
     { path: '/collect', component: Collect, name: 'collect' },
     { path: '/followup', component: FollowUp, name: 'followup' },
     { path: '/postdetails/:id', component: PostDetails, name: 'postdetails' },
-    { path: '/category', component: Category, name: 'category' }
+    { path: '/category', component: Category, name: 'category' },
+    { path: '/search', component: Search, name: 'search' }
   ]
 })
 const pathURL = ['/profile', '/compile', '/followup', '/collect', '/attention']
