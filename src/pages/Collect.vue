@@ -24,7 +24,6 @@ export default {
       data.forEach(element => {
         element.comment_length = element.comments.length
       })
-
       this.collectList = data
     }
   },

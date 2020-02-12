@@ -45,7 +45,7 @@ export default {
       pageSize: 5
     }
   },
-  async created () {
+  created () {
     this.getFollow()
   },
   methods: {
@@ -69,6 +69,8 @@ export default {
       const { statusCode, data } = res.data
       if (statusCode === 200) {
         this.followList = [...this.followList, ...data]
+        console.log(this.followList)
+
         this.loading = false
         if (data.length < this.pageSize) {
           this.finished = true
