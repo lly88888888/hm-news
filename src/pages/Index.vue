@@ -45,7 +45,12 @@ export default {
     }
   },
   async created () {
-    await this.getTabList()
+    const tabList = JSON.parse(localStorage.getItem('tabList'))
+    if (tabList) {
+      this.tabList = tabList
+    } else {
+      await this.getTabList()
+    }
     this.getPostList()
   },
   methods: {

@@ -20,6 +20,7 @@
       <Hmnav name="我的关注" describe="关注的用户" @click="$router.push('/attention')"></Hmnav>
       <Hmnav name="我的跟贴" describe="跟帖/回复" @click="$router.push('/followup')"></Hmnav>
       <Hmnav name="我的收藏" describe="文章/视频" @click="$router.push('/collect')"></Hmnav>
+      <Hmnav name="栏目管理" describe="自定义栏目类别" @click="$router.push('/category')"></Hmnav>
       <Hmnav name="设置"></Hmnav>
       <Hmnav name="退出" @click="exit"></Hmnav>
     </div>
