@@ -4,7 +4,7 @@
       <div class="video" v-if="item.type == 2">
         <p class="txt-cut">{{item.title}}</p>
         <div class="imgs">
-          <img :src="item.cover[0].url" alt="">
+          <img :src="$fixURL(item.cover[0].url)" alt="">
           <div class="icon">
             <i class="iconfont iconshipin"></i>
           </div>
@@ -23,7 +23,7 @@
           </p>
         </div>
         <div class="img">
-          <img :src="item.cover[0].url" alt="">
+          <img :src="$fixURL(item.cover[0].url)" alt="">
         </div>
       </div>
       <div class="other" v-else>

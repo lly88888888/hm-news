@@ -110,6 +110,12 @@ export default {
       this.pageIndex = 0
       this.onLoad()
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (to.name !== 'postdetails') {
+      this.$store.commit('uncatch', 'index')
+    }
+    next()
   }
 }
 </script>

@@ -16,10 +16,10 @@
         <span>{{postDetails.user.nickname}}</span>
         <span>{{postDetails.create_data | time}}</span>
       </div>
-      <div class="video" v-if="postDetails.type === 2">
+      <div class="video" v-if="postDetails.type === 2 && postDetails.content.startsWith('http')">
         <video :src="postDetails.content" controls></video>
       </div>
-      <div v-html="postDetails.content" v-else></div>
+      <div v-else v-html="postDetails.content"></div>
       <div class="interact">
         <div class="likes" :class="{goods:postDetails.has_like}" @click="likes(postDetails.id)">
           <i class="iconfont icondianzan"></i>

@@ -7,6 +7,7 @@ import './css/base.css'
 import { Toast, Dialog, Field, Cell, CellGroup, RadioGroup, Radio, Uploader, Button, List, Tab, Tabs, PullRefresh } from 'vant'
 import 'vant/lib/index.css'
 import moment from 'moment'
+import store from './store'
 import VueCropper from 'vue-cropper'
 import HmPost from './components/HmPost.vue'
 Vue.use(VueCropper)
@@ -53,7 +54,15 @@ axios.interceptors.request.use(function (config) {
 Vue.filter('time', (value, format = 'YYYY-MM-DD') => {
   return moment(value).format(format)
 })
+Vue.prototype.$fixURL = function (url) {
+  if (url.startsWith('http')) {
+    return url
+  } else {
+    return axios.defaults.baseURL + url
+  }
+}
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

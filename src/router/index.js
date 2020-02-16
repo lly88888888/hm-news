@@ -11,6 +11,7 @@ import FollowUp from '../pages/FollowUp.vue'
 import PostDetails from '../pages/PostDetails.vue'
 import Category from '../pages/Category.vue'
 import Search from '../pages/Search.vue'
+import store from '../store'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
@@ -30,6 +31,9 @@ const router = new VueRouter({
 })
 const pathURL = ['/profile', '/compile', '/followup', '/collect', '/attention']
 router.beforeEach((to, from, next) => {
+  if (to.name === 'index') {
+    store.commit('catch', 'index')
+  }
   const token = localStorage.getItem('token')
   if (pathURL.includes(to.path)) {
     if (token) {
